@@ -44,7 +44,7 @@ object Extras {
     // set for the project
     const val description = "Cross-platform SystemTray support for Swing/AWT, GtkStatusIcon, and AppIndicator on Java 6+"
     const val group = "com.dorkbox"
-    const val version = "3.17"
+    const val version = "3.33"
 
     // set as project.ext
     const val name = "SystemTray"
@@ -71,18 +71,18 @@ licensing {
         url(Extras.url)
         author(Extras.vendor)
 
-        extra("Lantern", License.APACHE_2) {
-            it.copyright(2010)
-            it.author("Brave New Software Project, Inc.")
-            it.url("https://github.com/getlantern/lantern")
-        }
-        extra("QZTray", License.APACHE_2) {
-            it.copyright(2016)
-            it.author("Tres Finocchiaro")
-            it.author("QZ Industries, LLC")
-            it.url("https://github.com/tresf/tray/blob/dorkbox/src/qz/utils/ShellUtilities.java")
-            it.note("Partial code released as Apache 2.0 for use in the SystemTray project by dorkbox, llc. Used with permission.")
-        }
+//        extra("Lantern", License.APACHE_2) {
+//            it.copyright(2010)
+//            it.author("Brave New Software Project, Inc.")
+//            it.url("https://github.com/getlantern/lantern")
+//        }
+//        extra("QZTray", License.APACHE_2) {
+//            it.copyright(2016)
+//            it.author("Tres Finocchiaro")
+//            it.author("QZ Industries, LLC")
+//            it.url("https://github.com/tresf/tray/blob/dorkbox/src/qz/utils/ShellUtilities.java")
+//            it.note("Partial code released as Apache 2.0 for use in the SystemTray project by dorkbox, llc. Used with permission.")
+//        }
     }
 }
 
@@ -191,7 +191,8 @@ sourceSets {
 }
 
 repositories {
-    mavenLocal() // this must be first!
+    //mavenLocal() // this must be first!
+    mavenCentral()
 
     jcenter()
 }

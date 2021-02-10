@@ -488,10 +488,15 @@ class SystemTray {
                     // BECAUSE of the `noexec` bit set. If JNA is moved into /bin, and the JNA library is specified to load from that
                     // location, we can use JNA.
                     return null;
+                default:
+                    // Nach Rücksprache mit Herr Werner verwendet IgelOS XFCE, was hier jedoch nicht erkannt wird vom Programm.
+                    // Daher hier "manuelles" Ausführen des Codes, der ausgeführt worden wäre im Regelfall:
+                    logger.debug("desktop environment is XFCE on Igel");
+                    return selectTypeQuietly(TrayType.Gtk);
             }
 
             // Try to autodetect if we can use app indicators (or if we need to fallback to GTK indicators)
-            BufferedReader bin = null;
+/*            BufferedReader bin = null;
             try {
                 // the ONLY guaranteed way to determine if indicator-application-service is running (and thus, using app-indicator),
                 // is to look through all /proc/<pid>/status, and first line should be Name:\tindicator-appli
@@ -551,7 +556,7 @@ class SystemTray {
                     // AppIndicators are now the "default" for most linux distro's.
                     return selectTypeQuietly(TrayType.AppIndicator);
                 }
-            }
+            }*/
         }
 
         throw new RuntimeException("This OS is not supported. Please create an issue with the details from `SystemTray.DEBUG=true;`");
@@ -1207,7 +1212,7 @@ class SystemTray {
      */
     public static
     String getVersion() {
-        return "3.17";
+        return "3.33";
     }
 
     /**
