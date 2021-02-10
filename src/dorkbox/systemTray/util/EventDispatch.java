@@ -5,8 +5,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.LoggerFactory;
+//import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import dorkbox.systemTray.SystemTray;
 import dorkbox.util.NamedThreadFactory;
 import dorkbox.jna.linux.GtkEventDispatch;
 
@@ -17,6 +20,7 @@ import dorkbox.jna.linux.GtkEventDispatch;
  */
 public
 class EventDispatch {
+    public static final Logger logger = LogManager.getLogger(EventDispatch.class);
     public static boolean DEBUG = false;
 
     public static final int TIMEOUT = 2;
@@ -53,7 +57,8 @@ class EventDispatch {
                 try {
                     runnable.run();
                 } catch (Exception e) {
-                    LoggerFactory.getLogger(GtkEventDispatch.class).error("Error during Event dispatch run loop: ", e);
+                    //LoggerFactory.getLogger(GtkEventDispatch.class).error("Error during Event dispatch run loop: ", e);
+                    logger.error("Error during Event dispatch run loop: ", e);
                 } finally {
                     countDownLatch.countDown();
                 }
@@ -65,9 +70,11 @@ class EventDispatch {
         try {
             if (!countDownLatch.await(TIMEOUT, TimeUnit.SECONDS)) {
                 if (DEBUG) {
-                    LoggerFactory.getLogger(EventDispatch.class).error(
+/*                    LoggerFactory.getLogger(EventDispatch.class).error(
                             "Something is very wrong. The Event Dispatch Queue took longer than " + TIMEOUT + " seconds " +
-                            "to complete.", new Exception(""));
+                            "to complete.", new Exception(""));*/
+                    logger.error("Something is very wrong. The Event Dispatch Queue took longer than \" + TIMEOUT + \" seconds \" +\n" +
+                            "                            \"to complete.", new Exception(""));
                 }
                 else {
                     throw new RuntimeException("Something is very wrong. The Event Dispatch Queue took longer than " + TIMEOUT +
@@ -75,7 +82,8 @@ class EventDispatch {
                 }
             }
         } catch (InterruptedException e) {
-            LoggerFactory.getLogger(GtkEventDispatch.class).error("Error waiting for dispatch to complete.", new Exception(""));
+            //LoggerFactory.getLogger(GtkEventDispatch.class).error("Error waiting for dispatch to complete.", new Exception(""));
+            logger.error("Error waiting for dispatch to complete.", new Exception(""));
         }
     }
 

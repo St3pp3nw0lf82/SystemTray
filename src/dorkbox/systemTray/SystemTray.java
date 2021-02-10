@@ -35,8 +35,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+/*import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;*/
 
 import dorkbox.jna.linux.AppIndicator;
 import dorkbox.jna.linux.Gtk;
@@ -67,6 +67,9 @@ import dorkbox.util.SwingUtil;
 import dorkbox.util.javaFx.JavaFX;
 import dorkbox.util.swt.Swt;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Professional, cross-platform **SystemTray**, **AWT**, **GtkStatusIcon**, and **AppIndicator** support for Java applications.
@@ -84,7 +87,8 @@ import dorkbox.util.swt.Swt;
 @SuppressWarnings({"unused", "Duplicates", "DanglingJavadoc", "WeakerAccess"})
 public final
 class SystemTray {
-    public static final Logger logger = LoggerFactory.getLogger(SystemTray.class);
+    //public static final Logger logger = LoggerFactory.getLogger(SystemTray.class);
+    public static final Logger logger = LogManager.getLogger(SystemTray.class);
 
     public enum TrayType {
         /** Will choose as a 'best guess' which tray type to use */
@@ -278,6 +282,7 @@ class SystemTray {
 
             switch (de) {
                 case Gnome: {
+                    logger.debug("desktop environment is gnome");
                     // check other DE / OS combos that are based on gnome
                     String GDM = System.getenv("GDMSESSION");
 
@@ -424,6 +429,7 @@ class SystemTray {
                     return selectTypeQuietly(TrayType.Gtk);
                 }
                 case KDE: {
+                    logger.debug("desktop environment is kde");
                     // kde 5.8+ is "high DPI", so we need to adjust the scale. Image resize will do that
 
                     double plasmaVersion = OSUtil.DesktopEnv.getPlasmaVersion();
@@ -450,14 +456,17 @@ class SystemTray {
                     }
                 }
                 case Unity: {
+                    logger.debug("desktop environment is unity");
                     // Ubuntu Unity is a weird combination. It's "Gnome", but it's not "Gnome Shell".
                     return selectTypeQuietly(TrayType.AppIndicator);
                 }
                 case Unity7: {
+                    logger.debug("desktop environment is unity7");
                     // Ubuntu Unity7 (17.04, which has MIR) is a weird combination. It's "Gnome", but it's not "Gnome Shell".
                     return selectTypeQuietly(TrayType.AppIndicator);
                 }
                 case XFCE: {
+                    logger.debug("desktop environment is xfce");
                     // NOTE: XFCE used to use appindicator3, which DOES NOT support images in the menu. This change was reverted.
                     // see: https://ask.fedoraproject.org/en/question/23116/how-to-fix-missing-icons-in-program-menus-and-context-menus/
                     // see: https://git.gnome.org/browse/gtk+/commit/?id=627a03683f5f41efbfc86cc0f10e1b7c11e9bb25
@@ -466,12 +475,15 @@ class SystemTray {
                     return selectTypeQuietly(TrayType.Gtk);
                 }
                 case LXDE: {
+                    logger.debug("desktop environment is lxde");
                     return selectTypeQuietly(TrayType.Gtk);
                 }
                 case MATE: {
+                    logger.debug("desktop environment is mate");
                     return selectTypeQuietly(TrayType.Gtk);
                 }
                 case Pantheon: {
+                    logger.debug("desktop environment is pantheon");
                     // elementaryOS. It only supports appindicator (not gtkstatusicon)
                     // http://bazaar.launchpad.net/~wingpanel-devs/wingpanel/trunk/view/head:/sample/SampleIndicator.vala
 
@@ -487,12 +499,19 @@ class SystemTray {
                     // libraries do not exist on ChromeOS. Additionally, Java cannot load external libraries unless they are in /bin,
                     // BECAUSE of the `noexec` bit set. If JNA is moved into /bin, and the JNA library is specified to load from that
                     // location, we can use JNA.
+                    logger.debug("desktop environment is chrome");
                     return null;
+                default:
+                    // Nach Rücksprache mit Herr Werner verwendet IgelOS XFCE, was hier jedoch nicht erkannt wird vom Programm.
+                    // Daher hier "manuelles" Ausführen des Codes, der ausgeführt worden wäre im Regelfall:
+                    logger.debug("desktop environment is XFCE on Igel");
+                    return selectTypeQuietly(TrayType.Gtk);
             }
 
             // Try to autodetect if we can use app indicators (or if we need to fallback to GTK indicators)
-            BufferedReader bin = null;
+/*            BufferedReader bin = null;
             try {
+                logger.debug("here proc");
                 // the ONLY guaranteed way to determine if indicator-application-service is running (and thus, using app-indicator),
                 // is to look through all /proc/<pid>/status, and first line should be Name:\tindicator-appli
                 File proc = new File("/proc");
@@ -515,6 +534,7 @@ class SystemTray {
                             String readLine = bin.readLine();
 
                             if (readLine != null && readLine.contains("indicator-app")) {
+                                logger.debug("found indicator-app!!!");
                                 // make sure we can also load the library (it might be the wrong version)
                                 try {
                                     return selectType(TrayType.AppIndicator);
@@ -543,23 +563,27 @@ class SystemTray {
             if (OS.isLinux()) {
                 // now just blanket query what we are to guess...
                 if (OSUtil.Linux.isUbuntu()) {
+                    logger.debug("is ubuntu");
                     return selectTypeQuietly(TrayType.AppIndicator);
                 }
                 else if (OSUtil.Linux.isFedora()) {
+                    logger.debug("is fedora");
                     return selectTypeQuietly(TrayType.AppIndicator);
                 } else {
                     // AppIndicators are now the "default" for most linux distro's.
+                    logger.debug("using default....");
                     return selectTypeQuietly(TrayType.AppIndicator);
                 }
-            }
+            }*/
         }
-
+        logger.debug("this OS is not supported!");
         throw new RuntimeException("This OS is not supported. Please create an issue with the details from `SystemTray.DEBUG=true;`");
     }
 
     @SuppressWarnings({"ConstantConditions", "StatementWithEmptyBody"})
     private static
     void init() {
+        logger.error("init(), here 1....");
         // have to RECREATE the menu if we call get() after remove()!
 
 //        if (DEBUG) {
@@ -581,6 +605,10 @@ class SystemTray {
         boolean isNix = OS.isLinux() || OS.isUnix();
         boolean isWindows = OS.isWindows();
         boolean isMacOsX = OS.isMacOsX();
+
+        logger.error("is linux: " + isNix);
+        logger.error("is windows: " + isWindows);
+        logger.error("is mac: " + isMacOsX);
 
         // Windows can ONLY use Swing (non-native) or WindowsNotifyIcon (native) - AWT looks absolutely horrid and is not an option
         // OSx can use Swing (non-native) or AWT (native).
@@ -657,6 +685,8 @@ class SystemTray {
 
             // this checks to see if Swing/SWT/JavaFX has loaded GTK yet, and if so, what version they loaded.
             int loadedGtkVersion = GtkCheck.getLoadedGtkVersion();
+            logger.error("isNix...");
+            logger.error("loaded GTK version: " + loadedGtkVersion);
             if (loadedGtkVersion == 2) {
                 if (AUTO_FIX_INCONSISTENCIES) {
                     if (!FORCE_GTK2) {
@@ -877,7 +907,7 @@ class SystemTray {
         } else {
             trayType = selectTypeQuietly(SystemTray.FORCE_TRAY_TYPE);
         }
-
+        logger.debug("selected traytype: " + trayType.toString());
         if (trayType == null) {
             if (OSUtil.DesktopEnv.isChromeOS()) {
                 logger.error("ChromeOS detected and it is not supported. Aborting.");
@@ -954,6 +984,7 @@ class SystemTray {
 
 
                 if (OSUtil.Linux.isElementaryOS() && OSUtil.Linux.getElementaryOSVersion()[0] >= 5) {
+                    logger.debug("is elementary os && version > 5");
                     // in version 5.0+, they REMOVED support for appindicators. You can add it back via some extra work.
                     // see: https://git.dorkbox.com/dorkbox/elementary-indicators
 
@@ -1005,7 +1036,7 @@ class SystemTray {
 
                 if (!Gtk.isLoaded) {
                     trayType = selectTypeQuietly(TrayType.Swing);
-
+                    logger.debug("gtk is not loaded!");
                     logger.error("Unable to initialize GTK! Something is severely wrong! Using the Swing Tray type instead.");
                 }
 
@@ -1013,9 +1044,10 @@ class SystemTray {
                 else if (isTrayType(trayType, TrayType.AppIndicator)) {
                     if (!AppIndicator.isLoaded) {
                         // YIKES. AppIndicator couldn't load.
-
+                        logger.debug("appindicator is not loaded!");
                         // can we fallback to swing? KDE does not work for this...
                         if (AUTO_FIX_INCONSISTENCIES && java.awt.SystemTray.isSupported() && !OSUtil.DesktopEnv.isKDE()) {
+                            logger.debug("switching back to swing");
                             trayType = selectTypeQuietly(TrayType.Swing);
 
                             logger.warn("Unable to initialize the AppIndicator correctly. Using the Swing Tray type instead.");
@@ -1039,6 +1071,7 @@ class SystemTray {
             if (AUTO_FIX_INCONSISTENCIES && SystemTray.SWING_UI == null) {
                 if (isNix && isTrayType(trayType, TrayType.Swing)) {
                     SystemTray.SWING_UI = new LinuxSwingUI();
+                    logger.warn("here 2");
                 }
                 else if (isWindows &&
                          (isTrayType(trayType, TrayType.Swing) || isTrayType(trayType, TrayType.WindowsNative))) {
@@ -1057,6 +1090,7 @@ class SystemTray {
             }
 
             if (AUTO_FIX_INCONSISTENCIES) {
+                logger.debug("AUTO_FIX_INCONSISTENCIES enabled!");
                 // this logic has to be before we create the system Tray, but after GTK is started (if applicable)
                 if (isWindows && isTrayType(trayType, TrayType.Swing)) {
                     // we don't permit AWT for windows (it looks absolutely HORRID)
@@ -1070,8 +1104,10 @@ class SystemTray {
                     SystemTrayFixes.fixMacOS();
                 }
                 else if (isNix && isTrayType(trayType, TrayType.Swing)) {
+                    logger.debug("here 3");
                     // linux/mac doesn't have transparent backgrounds for swing and hard-codes the image size
                     SystemTrayFixes.fixLinux(trayImageSize);
+                    logger.debug("here 4");
                 }
             }
 
@@ -1090,14 +1126,18 @@ class SystemTray {
 
             if (isTrayType(trayType, TrayType.Swing) || isTrayType(trayType, TrayType.Awt) || isTrayType(trayType, TrayType.WindowsNative)) {
                 // ensure AWT toolkit is initialized.
+                logger.debug("here 5");
                 java.awt.Toolkit.getDefaultToolkit();
+                logger.debug("here 6");
             }
 
 
 
             // javaFX and SWT **CAN NOT** start on the EDT!!
             // linux + GTK/AppIndicator + windows-native menus must not start on the EDT!
+            logger.debug("here 7");
             systemTray = new SystemTray();
+            logger.debug("here 8");
         } catch (Exception e) {
             logger.error("Unable to create tray type: '{}'", trayType.getSimpleName(), e);
         }
@@ -1106,17 +1146,27 @@ class SystemTray {
         // the "menu" in this case is the ACTUAL menu that shows up in the system tray (the icon + submenu, etc)
         final AtomicReference<Tray> reference = new AtomicReference<Tray>();
         try {
+            logger.debug("here 9");
             // AWT/Swing must be constructed on the EDT however...
             if (!JavaFX.isLoaded && !Swt.isLoaded &&
                 (isTrayType(trayType, TrayType.Swing) || isTrayType(trayType, TrayType.Awt))) {
                 // have to construct swing stuff inside the swing EDT
+                logger.debug("here 10");
                 final Class<? extends Menu> finalTrayType = trayType;
+                if (finalTrayType != null) {
+                    logger.debug("class name of finalTrayType: " + finalTrayType.toString());
+                } else {
+                    logger.debug("finalTrayType is null");
+                }
+                //logger.debug("class name of finalTrayType: " + finalTrayType.getClass().getEnclosingClass().getName());
                 SwingUtil.invokeAndWait(new Runnable() {
                     @Override
                     public
                     void run() {
                         try {
+                            logger.debug("here 11");
                             reference.set((Tray) finalTrayType.getConstructors()[0].newInstance(systemTray));
+                            logger.debug("here 12");
                         } catch (Exception e) {
                             logger.error("Unable to create tray type: '" + finalTrayType.getSimpleName() + "'", e);
                         }
@@ -1207,7 +1257,7 @@ class SystemTray {
      */
     public static
     String getVersion() {
-        return "3.17";
+        return "3.20";
     }
 
     /**

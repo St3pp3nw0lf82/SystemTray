@@ -16,6 +16,7 @@
 
 import java.time.Instant
 import java.util.*
+//import io.spring.gradle.dependencymanagement.*
 
 ///////////////////////////////
 //////    PUBLISH TO SONATYPE / MAVEN CENTRAL
@@ -37,6 +38,8 @@ plugins {
 
     id("com.dorkbox.CrossCompile") version "1.0.1"
 
+    //id("io.spring.dependency-management") version "1.0.1.RELEASE"
+
     kotlin("jvm") version "1.3.72"
 }
 
@@ -44,7 +47,7 @@ object Extras {
     // set for the project
     const val description = "Cross-platform SystemTray support for Swing/AWT, GtkStatusIcon, and AppIndicator on Java 6+"
     const val group = "com.dorkbox"
-    const val version = "3.17"
+    const val version = "3.20"
 
     // set as project.ext
     const val name = "SystemTray"
@@ -70,7 +73,21 @@ licensing {
         description(Extras.description)
         url(Extras.url)
         author(Extras.vendor)
-
+/*
+        extra("Lantern", License.APACHE_2) {
+            copyright(2010)
+            author("Brave New Software Project, Inc.")
+            url("https://github.com/getlantern/lantern")
+        }
+        extra("QZTray", License.APACHE_2) {
+            copyright(2016)
+            author("Tres Finocchiaro")
+            author("QZ Industries, LLC")
+            url("https://github.com/tresf/tray/blob/dorkbox/src/qz/utils/ShellUtilities.java")
+            note("Partial code released as Apache 2.0 for use in the SystemTray project by dorkbox, llc. Used with permission.")
+        }
+        */
+/*
         extra("Lantern", License.APACHE_2) {
             it.copyright(2010)
             it.author("Brave New Software Project, Inc.")
@@ -83,6 +100,7 @@ licensing {
             it.url("https://github.com/tresf/tray/blob/dorkbox/src/qz/utils/ShellUtilities.java")
             it.note("Partial code released as Apache 2.0 for use in the SystemTray project by dorkbox, llc. Used with permission.")
         }
+     */   
     }
 }
 
@@ -191,7 +209,8 @@ sourceSets {
 }
 
 repositories {
-    mavenLocal() // this must be first!
+    //mavenLocal() // this must be first!
+    mavenCentral()
 
     jcenter()
 }
@@ -266,9 +285,16 @@ jar.apply {
 //    }
 //}
 
-
 dependencies {
+
+    //runtime(group = "org.apache.logging.log4j", name = "log4j-api", version = "2.13.0")
+    //runtime(group = "org.apache.logging.log4j", name = "log4j-core", version = "2.13.0")
+    //compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    //runtime(group = "org.slf4j", name = "slf4j-api", version = "1.7.30")
+    runtime(group = "com.dorkbox", name = "Utilities", version = "1.5.1")
     implementation("com.dorkbox:Utilities:1.5.1")
+
+    //implementation("com.dorkbox:Utilities:1.5.1")
     implementation("com.dorkbox:ShellExecutor:1.1+")
 //    implementation("com.dorkbox:Executor:1.1") // java 11
 
@@ -278,7 +304,11 @@ dependencies {
     implementation("net.java.dev.jna:jna:$jnaVersion")
     implementation("net.java.dev.jna:jna-platform:$jnaVersion")
 
-    implementation("org.slf4j:slf4j-api:1.7.30")
+    //implementation("org.slf4j:slf4j-api:1.7.30")
+    runtime(group = "org.apache.logging.log4j", name = "log4j-api", version = "2.13.0")
+    runtime(group = "org.apache.logging.log4j", name = "log4j-core", version = "2.13.0")
+    implementation("org.apache.logging.log4j:log4j-api:2.13.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.13.0")
     val log = runtimeOnly("ch.qos.logback:logback-classic:1.2.3")!!
 
 

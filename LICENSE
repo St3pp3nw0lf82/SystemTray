@@ -1,35 +1,21 @@
  - SystemTray - Cross-platform SystemTray support for Swing/AWT, GtkStatusIcon, and AppIndicator on Java 6+
    [The Apache Software License, Version 2.0]
    https://git.dorkbox.com/dorkbox/SystemTray
-   Copyright 2020
+   Copyright 2021
      Dorkbox LLC
 
    Extra license information
-     - Lantern - 
-       [The Apache Software License, Version 2.0]
-       https://github.com/getlantern/lantern
-       Copyright 2010
-         Brave New Software Project, Inc.
-
-     - QZTray - 
-       [The Apache Software License, Version 2.0]
-       https://github.com/tresf/tray/blob/dorkbox/src/qz/utils/ShellUtilities.java
-       Copyright 2016
-         Tres Finocchiaro
-         QZ Industries, LLC
-       Partial code released as Apache 2.0 for use in the SystemTray project by dorkbox, llc. Used with permission.
-
      - Eclipse Platform - Frameworks and common services to support the use of Eclipse and it's tools (SWT)
        [Eclipse Public License (EPL)]
        https://projects.eclipse.org/projects/eclipse.platform
-       Copyright 2020
+       Copyright 2021
          The Eclipse Foundation, Inc.
 
      - Javassist - Javassist (JAVA programming ASSISTant) makes Java bytecode manipulation simple
        [The Apache Software License, Version 2.0]
        http://www.javassist.org
        https://github.com/jboss-javassist/javassist
-       Copyright 2020
+       Copyright 2021
          Shigeru Chiba
          Bill Burke
          Jason T. Greene
@@ -38,17 +24,11 @@
      - JNA - Simplified native library access for Java.
        [The Apache Software License, Version 2.0]
        https://github.com/twall/jna
-       Copyright 2020
+       Copyright 2021
          Timothy Wall
-
-     - SLF4J - Simple facade or abstraction for various logging frameworks
-       [MIT License]
-       http://www.slf4j.org
-       Copyright 2020
-         QOS.ch
 
      - Logback - Logback is a logging framework for Java applications
        [The Apache Software License, Version 2.0]
        http://logback.qos.ch
-       Copyright 2020
+       Copyright 2021
          QOS.ch

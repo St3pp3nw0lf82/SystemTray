@@ -32,6 +32,9 @@ import dorkbox.systemTray.Tray;
 import dorkbox.util.OS;
 import dorkbox.util.SwingUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Class for handling all system tray interaction, via Swing.
  *
@@ -51,14 +54,19 @@ class _SwingTray extends Tray {
     private volatile File imageFile;
     private volatile String tooltipText = "";
 
+    public static final Logger logger = LogManager.getLogger(dorkbox.systemTray.ui.swing._SwingTray.class);
+
     // Called in the EDT
     public
     _SwingTray(final dorkbox.systemTray.SystemTray systemTray) {
         super(systemTray);
-
+        logger.debug("_SwingTray constructor called");
         if (!SystemTray.isSupported()) {
+            logger.debug("SystemTray not supported!");
             throw new RuntimeException("System Tray is not supported in this configuration! Please write an issue and include your OS " +
                                        "type and configuration");
+        } else {
+            logger.debug("SystemTray supported!");
         }
 
         // we override various methods, because each tray implementation is SLIGHTLY different. This allows us customization.
@@ -70,16 +78,19 @@ class _SwingTray extends Tray {
                     @Override
                     public
                     void run() {
+                        logger.debug("here 1");
                         if (tray == null) {
                             tray = SystemTray.getSystemTray();
                         }
-
+                        logger.debug("here 2");
                         boolean enabled = menuItem.getEnabled();
 
                         if (visible && !enabled) {
                             tray.remove(trayIcon);
                             visible = false;
+                            logger.debug("here 3");
                         }
+
                         else if (!visible && enabled) {
                             try {
                                 tray.add(trayIcon);
@@ -88,6 +99,7 @@ class _SwingTray extends Tray {
                                 // don't want to matter which (setImage/setTooltip/setEnabled) is done first, and if the image/enabled is changed, we
                                 // want to make sure keep the tooltip text the same as before.
                                 trayIcon.setToolTip(tooltipText);
+                                logger.debug("here 4");
                             } catch (AWTException e) {
                                 dorkbox.systemTray.SystemTray.logger.error("Error adding the icon back to the tray", e);
                             }
@@ -221,7 +233,7 @@ class _SwingTray extends Tray {
                 }
             }
         };
-
+        logger.debug("here 5");
         bind(swingMenu, null, systemTray);
     }
 

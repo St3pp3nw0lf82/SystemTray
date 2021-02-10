@@ -30,14 +30,15 @@ import dorkbox.util.CacheUtil;
 import dorkbox.util.Desktop;
 import dorkbox.util.OS;
 import dorkbox.util.javaFx.JavaFX;
-import javafx.application.Application;
+
+/*import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import javafx.stage.Stage;*/
 
 /**
  * Icons from 'SJJB Icons', public domain/CC0 icon set
@@ -45,7 +46,7 @@ import javafx.stage.Stage;
  * Needs JavaFX to run. NOTE: JavaFX on Mac (Java7) has many bugs when also used with AWT. This class does NOT extend 'Application'
  * (javafx) class on purpose, so that we can work around those issues
  */
-public
+/*public
 class TestTrayJavaFX {
 
     public static final URL BLUE_CAMPING = TestTray.class.getResource("accommodation_camping.glow.0092DA.32.png");
@@ -295,4 +296,4 @@ class TestTrayJavaFX {
             }
         })).setShortcut('q'); // case does not matter
     }
-}
+}*/
